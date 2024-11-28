@@ -1,5 +1,7 @@
-import { ChainId, dextraQuote, DextraQuoteEstimation } from "./quote";
 import * as ethers from "ethers";
+import { ChainId } from "./constants";
+import { DextraQuoteEstimation } from "./types";
+import { fetchQuote } from "./scripts/fetchQuote";
 
 const addressEVM = "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5"
 const addressSOL = "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9"
@@ -13,7 +15,7 @@ export const DextraApiKey = "2pxw52h8qln"
 
 async function main() {
   let estimation: DextraQuoteEstimation;
-  estimation = await dextraQuote({
+  estimation = await fetchQuote({
     senderAddress: addressEVM,
     amount: "1000000000000000000", // 1ETH
     srcToken: NativeToken,
@@ -23,7 +25,7 @@ async function main() {
   });
   console.log("1 ETH to USDC in Base", estimation?.outputAmount);
 
-  estimation = await dextraQuote({
+  estimation = await fetchQuote({
     senderAddress: addressEVM,
     amount: "1000000000000000000", // 1ETH
     srcToken: NativeToken,
@@ -35,7 +37,7 @@ async function main() {
   });
   console.log("1 ETH in Base to USDC in Arbitrum with additional 0.01ETH in the destination chain (Arbitrum) that can be used as gas", estimation?.outputAmount);
 
-  estimation = await dextraQuote({
+  estimation = await fetchQuote({
     senderAddress: addressEVM,
     amount: "1000000000000000000", // 1ETH
     srcToken: NativeToken,
@@ -46,7 +48,7 @@ async function main() {
   });
   console.log("1 ETH in Base to BNB in Binance Smart Chain", estimation?.outputAmount);
 
-  estimation = await dextraQuote({
+  estimation = await fetchQuote({
     senderAddress: addressEVM,
     destinationAddress: addressSOL,
     amount: "100000000", // 100USDC
@@ -59,7 +61,7 @@ async function main() {
   });
   console.log("100 USDC in Base to MOODENG in Solana with 1000", estimation?.outputAmount);
 
-  estimation = await dextraQuote({
+  estimation = await fetchQuote({
     senderAddress: addressEVM,
     amount: "100000000", // 100USDC
     srcToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC Arb
@@ -130,7 +132,7 @@ async function main() {
     fallbackAddress: addressEVM,
   }
 
-  estimation = await dextraQuote({
+  estimation = await fetchQuote({
     senderAddress: addressEVM,
     amount: "1000000000000000000", // 1ETH
     srcToken: NativeToken,
