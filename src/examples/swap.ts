@@ -1,8 +1,7 @@
 import { fetchEvmQuote } from "../scripts/fetchQuote";
 import { ChainId, NativeToken } from "../constants";
-import { baseProvider, signer } from "../network";
-import { ethers } from "ethers";
-import { IERC20_ABI } from "../abi/IERC20";
+import { baseSigner } from "../network";
+import { approveIfRequired } from "../scripts/approveIfRequired";
 
 async function main() {
   const amount = "1000000000000000000"; // 1ETH
@@ -12,7 +11,7 @@ async function main() {
   const destChain = ChainId.BASE;
 
   const quote = await fetchEvmQuote({
-    senderAddress: signer.address,
+    senderAddress: baseSigner.address,
     amount,
     srcToken,
     destToken,
@@ -20,29 +19,10 @@ async function main() {
     destChain,
   });
 
-  if (srcToken as string !== NativeToken) {
-    const TokenIn = new ethers.Contract(
-      srcToken,
-      IERC20_ABI,
-      baseProvider,
-    );
-    const allowance: bigint = await TokenIn.allowance(
-      signer.address,
-      quote.calldatas.to,
-    );
 
-    if (allowance < BigInt(amount)) {
-      console.log(`Approving ${amount} tokens`);
-      const approveTx = await TokenIn.approve(
-        quote.calldatas.to,
-        amount,
-      );
+  await approveIfRequired(baseSigner, srcToken, quote.calldatas.to, amount);
 
-      await approveTx.wait();
-    }
-  }
-
-  const swapTx = await signer.sendTransaction({
+  const swapTx = await baseSigner.sendTransaction({
     to: quote.calldatas.to,
     data: quote.calldatas.data,
     value: quote.calldatas.value,
