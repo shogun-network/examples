@@ -1,6 +1,8 @@
 import { fetchEvmQuote } from "../scripts/fetchQuote";
 import { ChainId, NativeToken } from "../constants";
-import { signer } from "../network";
+import { baseProvider, signer } from "../network";
+import { ethers } from "ethers";
+import { IERC20_ABI } from "../abi/IERC20";
 
 async function main() {
   const amount = "1000000000000000000"; // 1ETH
@@ -18,7 +20,35 @@ async function main() {
     destChain,
   });
 
-  console.log(quote);
+  if (srcToken as string !== NativeToken) {
+    const TokenIn = new ethers.Contract(
+      srcToken,
+      IERC20_ABI,
+      baseProvider,
+    );
+    const allowance: bigint = await TokenIn.allowance(
+      signer.address,
+      quote.calldatas.to,
+    );
+
+    if (allowance < BigInt(amount)) {
+      console.log(`Approving ${amount} tokens`);
+      const approveTx = await TokenIn.approve(
+        quote.calldatas.to,
+        amount,
+      );
+
+      await approveTx.wait();
+    }
+  }
+
+  const swapTx = await signer.sendTransaction({
+    to: quote.calldatas.to,
+    data: quote.calldatas.data,
+    value: quote.calldatas.value,
+  });
+  await swapTx.wait();
+  console.log(`https://basescan.org/tx/${swapTx.hash}`);
 }
 
 main().then();
