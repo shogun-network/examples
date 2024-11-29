@@ -6,7 +6,9 @@
   "scripts": {
     "evm-fetchQuote": "npx tsx src/examples/evm-fetchQuote.ts",
     "evm-swap": "npx tsx src/examples/evm-swap.ts",
-    "evm-externalCall": "npx tsx src/examples/evm-externalCall.ts"
+    "evm-externalCall": "npx tsx src/examples/evm-externalCall.ts",
+    "solana-swap": "npx tsx src/examples/solana-swap.ts",
+    "solana-bridge-to-base": "npx tsx src/examples/solana-bridge-to-base.ts"
   },
   "engines": {
     "node": ">=v20.13.1"
