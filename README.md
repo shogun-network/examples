@@ -1,3 +1,4 @@
 # examples
 
-How to test run all the examples `npm run test`
+Copy and update the env `cp .env.example .env`
+and to test some fetch quoting run `npm run test`

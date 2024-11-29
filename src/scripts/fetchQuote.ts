@@ -1,6 +1,6 @@
 import axios from "axios";
 import dotenv from "dotenv";
-import { DextraQuoteEstimation, QuoteQueryParams } from "../types";
+import { QuoteQueryParams } from "../types";
 import { EvmEstimation } from "../types/evm";
 import { SolanaEstimation } from "../types/solana";
 

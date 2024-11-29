@@ -6,13 +6,22 @@ import { fetchQuote } from "../scripts/fetchQuote";
 const addressEVM = "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5"
 const addressSOL = "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9"
 
+const baseUSDC = "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
+const arbitrumUSDC = "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+const arbitrumUSDT = "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9"
+const ethereumUSDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+const solanaMOODENG = "ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY"
+
+const arbitrumAaveDepositorAddress = "0xDcBb658910b5192A43B79fD8244bDF27940d3B6b";
+const arbitrumAavePoolAddress = "0x794a61358d6845594f94dc1db02a252b5b4814ad";
+
 async function main() {
   let estimation: DextraQuoteEstimation;
   estimation = await fetchQuote({
     senderAddress: addressEVM,
     amount: "1000000000000000000", // 1ETH
     srcToken: NativeToken,
-    destToken: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", // USDC Base
+    destToken: baseUSDC,
     srcChain: ChainId.BASE,
     destChain: ChainId.BASE,
   });
@@ -22,7 +31,7 @@ async function main() {
     senderAddress: addressEVM,
     amount: "1000000000000000000", // 1ETH
     srcToken: NativeToken,
-    destToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC Arbitrum
+    destToken: arbitrumUSDC,
     srcChain: ChainId.BASE,
     destChain: ChainId.ARBITRUM_ONE,
     dstChainOrderAuthorityAddress: addressEVM, // (usually, a user wallet's address) on the destination chain who is authorised to patch and cancel the order.
@@ -45,8 +54,8 @@ async function main() {
     senderAddress: addressEVM,
     destinationAddress: addressSOL,
     amount: "100000000", // 100USDC
-    srcToken: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", // USDC
-    destToken: "ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY", // MOODENG
+    srcToken: baseUSDC,
+    destToken: solanaMOODENG,
     srcChain: ChainId.BASE,
     destChain: ChainId.SOLANA,
     gasRefuel: "10000000000000000", // 0.01ETH worth of SOL ~ 0.14969862280503093 SOL
@@ -57,8 +66,8 @@ async function main() {
   estimation = await fetchQuote({
     senderAddress: addressEVM,
     amount: "100000000", // 100USDC
-    srcToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC Arb
-    destToken: "0xdAC17F958D2ee523a2206206994597C13D831ec7", // USDT ETH
+    srcToken: arbitrumUSDC,
+    destToken: ethereumUSDT,
     srcChain: ChainId.ARBITRUM_ONE,
     destChain: ChainId.ETHEREUM,
     dstChainOrderAuthorityAddress: addressEVM,
@@ -98,19 +107,16 @@ async function main() {
   ];
   const AaveDepositorContract = new ethers.Interface(AaveDepositorInterface);
 
-  // USDT AAVE pool on Arbitrum chain
-  const aaveDepositorAddress = "0xDcBb658910b5192A43B79fD8244bDF27940d3B6b";
-  const aavePoolAddress = "0x794a61358d6845594f94dc1db02a252b5b4814ad";
-  const usdtTokenAddress = "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9";
+
 
   const externalCall = {
     type: 'evm',
-    to: aaveDepositorAddress,
+    to: arbitrumAaveDepositorAddress,
     data: AaveDepositorContract.encodeFunctionData(
         'supply',
         [
-          aavePoolAddress,
-          usdtTokenAddress,
+          arbitrumAavePoolAddress,
+          arbitrumUSDT,
           // supplying on behalf of our wallet
           addressEVM,
           // referralCode means no rewards will go to referral address
@@ -129,7 +135,7 @@ async function main() {
     senderAddress: addressEVM,
     amount: "1000000000000000000", // 1ETH
     srcToken: NativeToken,
-    destToken: usdtTokenAddress,
+    destToken: arbitrumUSDT,
     srcChain: ChainId.ARBITRUM_ONE,
     destChain: ChainId.ARBITRUM_ONE,
     externalCall: JSON.stringify(externalCall),
