@@ -2,6 +2,7 @@ import { fetchEvmQuote } from "../scripts/fetchQuote";
 import { ChainId, NativeToken } from "../constants";
 import { baseSigner } from "../network";
 import { approveIfRequired } from "../scripts/approveIfRequired";
+import { formatStringEstimation } from "../scripts/formatting";
 
 async function main() {
   const amount = "1000000000000000000"; // 1ETH
@@ -19,6 +20,9 @@ async function main() {
     destChain,
   });
 
+  console.log(`Expected to receive: ${
+    formatStringEstimation(quote.outputAmount.value, quote.outputAmount.decimals)
+  } ${quote.outputAmount.symbol}`);
 
   await approveIfRequired(baseSigner, srcToken, quote.calldatas.to, amount);
 

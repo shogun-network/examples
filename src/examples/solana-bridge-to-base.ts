@@ -47,7 +47,10 @@ async function main() {
     transaction.sign([solanaSigner]);
   }
 
+  // sending transactions as Jito bundle
   const bundleId = await sendJitoBundle(transactions);
+
+  // waiting for transactions confirmation
   while (true) {
     const bundleData = await getBundleStatuses(bundleId);
     console.log(`Bundle status: ${bundleData.status}`);
