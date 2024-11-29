@@ -1,0 +1,32 @@
+{
+  "name": "dextra-examples",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "evm-fetchQuote": "npx tsx src/examples/evm-fetchQuote.ts",
+    "evm-swap": "npx tsx src/examples/evm-swap.ts",
+    "evm-externalCall": "npx tsx src/examples/evm-externalCall.ts",
+    "solana-swap": "npx tsx src/examples/solana-swap.ts",
+    "solana-bridge-to-base": "npx tsx src/examples/solana-bridge-to-base.ts"
+  },
+  "engines": {
+    "node": ">=v20.13.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/web3.js": "^1.95.5",
+    "@types/node": "^20.13.0",
+    "axios": "^1.7.2",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.4"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsx": "^4.10.5",
+    "typescript": "^5.4.5"
+  }
+}
