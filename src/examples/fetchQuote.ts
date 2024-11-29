@@ -1,17 +1,10 @@
 import * as ethers from "ethers";
-import { ChainId } from "./constants";
-import { DextraQuoteEstimation } from "./types";
-import { fetchQuote } from "./scripts/fetchQuote";
+import { ChainId, NativeToken } from "../constants";
+import { DextraQuoteEstimation } from "../types";
+import { fetchQuote } from "../scripts/fetchQuote";
 
 const addressEVM = "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5"
 const addressSOL = "5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9"
-
-// any native token is represented as this token address.
-const NativeToken = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-
-// replace with public available URL
-export const DextraQuoteURL = "http://localhost:3000/v2/quote"
-export const DextraApiKey = "2pxw52h8qln"
 
 async function main() {
   let estimation: DextraQuoteEstimation;
@@ -33,7 +26,7 @@ async function main() {
     srcChain: ChainId.BASE,
     destChain: ChainId.ARBITRUM_ONE,
     dstChainOrderAuthorityAddress: addressEVM, // (usually, a user wallet's address) on the destination chain who is authorised to patch and cancel the order.
-    gasRefuel: 10000000000000000 // 0.01ETH Bridge-only param for funding destination address with native tokens of destination chain.
+    gasRefuel: "10000000000000000" // 0.01ETH Bridge-only param for funding destination address with native tokens of destination chain.
   });
   console.log("1 ETH in Base to USDC in Arbitrum with additional 0.01ETH in the destination chain (Arbitrum) that can be used as gas", estimation?.outputAmount);
 
@@ -56,7 +49,7 @@ async function main() {
     destToken: "ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY", // MOODENG
     srcChain: ChainId.BASE,
     destChain: ChainId.SOLANA,
-    gasRefuel: 10000000000000000, // 0.01ETH worth of SOL ~ 0.14969862280503093 SOL
+    gasRefuel: "10000000000000000", // 0.01ETH worth of SOL ~ 0.14969862280503093 SOL
     dstChainOrderAuthorityAddress: addressSOL
   });
   console.log("100 USDC in Base to MOODENG in Solana with 1000", estimation?.outputAmount);
@@ -69,7 +62,7 @@ async function main() {
     srcChain: ChainId.ARBITRUM_ONE,
     destChain: ChainId.ETHEREUM,
     dstChainOrderAuthorityAddress: addressEVM,
-    affiliateFee: 2, // 2% of affiliate fee, means 2 USDC goes to the affiliateWallet and 98% will be used to swap
+    affiliateFee: "2", // 2% of affiliate fee, means 2 USDC goes to the affiliateWallet and 98% will be used to swap
     affiliateWallet: addressEVM, // could be any wallet address
   });
   console.log("100 USDC in Arbitrum to USDT in Ethereum with 2% affiliate fee, (only 98USDC will be swapped to USDT)", estimation?.outputAmount);

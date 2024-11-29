@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test": "npx tsx ./src/examples.ts"
+    "test": "npx tsx ./src/examples/fetchQuote.ts"
   },
   "engines": {
     "node": ">=v20.13.1"
