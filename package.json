@@ -4,7 +4,9 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test": "npx tsx ./src/examples/fetchQuote.ts"
+    "evm-fetchQuote": "npx tsx src/examples/evm-fetchQuote.ts",
+    "evm-swap": "npx tsx src/examples/evm-swap.ts",
+    "evm-externalCall": "npx tsx src/examples/evm-externalCall.ts"
   },
   "engines": {
     "node": ">=v20.13.1"
